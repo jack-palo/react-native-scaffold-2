@@ -5,6 +5,9 @@ on: push
 jobs:
   install-e2e-dependencies:
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: e2e
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -13,15 +16,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: yarn
-          cache-dependency-path: e2e/yarn.lock
+          cache-dependency-path: yarn.lock
           node-version: 22
 
-      - name: Install Yarn dependencies for e2e
+      - name: Install Yarn dependencies
         run: yarn --frozen-lockfile --prefer-offline
-        working-directory: e2e
 
   install-frontend-dependencies:
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: fe
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,12 +35,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: yarn
-          cache-dependency-path: fe/yarn.lock
+          cache-dependency-path: yarn.lock
           node-version: 22
 
-      - name: Install Yarn dependencies for frontend
+      - name: Install Yarn dependencies
         run: yarn --frozen-lockfile --prefer-offline
-        working-directory: fe
 
       - name: Install macOS dependencies
         run: |
@@ -71,6 +75,9 @@ jobs:
   e2e-ios:
     runs-on: macos-latest
     needs: [install-e2e-dependencies, install-frontend-dependencies]
+    defaults:
+      run:
+        working-directory: e2e
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -79,18 +86,16 @@ jobs:
         id: cache-detox-build
         uses: actions/cache@v4
         with:
-          path: e2e/ios/build
+          path: ios/build
           key: ${{ runner.os }}-detox-build
           restore-keys: |
             ${{ runner.os }}-detox-build
 
       - name: Detox build
         run: yarn build:ios:ci
-        working-directory: e2e
 
       - name: Detox test
         run: yarn test:ios:ci
-        working-directory: e2e
 
       - name: Upload artifacts
         if: failure()
