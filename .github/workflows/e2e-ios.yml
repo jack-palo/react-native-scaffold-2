@@ -14,9 +14,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Print current directory
-        run: pwd
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -49,6 +46,12 @@ jobs:
           key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
+
+      - name: Print working directory
+        working-directory: fe
+        run: |
+          pwd
+          ls -la
 
       - name: Install CocoaPods
         if: steps.cache-cocoapods.outputs.cache-hit != 'true'
