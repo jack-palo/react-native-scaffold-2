@@ -22,6 +22,10 @@ jobs:
       - name: Install Yarn dependencies
         run: yarn --frozen-lockfile --prefer-offline
 
+      - name: Save node_modules
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: echo "node_modules cached"
+
   install-frontend-dependencies:
     runs-on: macos-latest
     defaults:
@@ -81,6 +85,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: fe/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('fe/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
 
       - name: Cache Detox build
         id: cache-detox-build
