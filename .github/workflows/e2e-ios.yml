@@ -37,13 +37,6 @@ jobs:
         run: yarn --frozen-lockfile --prefer-offline
         working-directory: fe
 
-  install-cocoapods:
-    runs-on: macos-latest
-    needs: [install-frontend-dependencies]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Install macOS dependencies
         run: |
           brew tap wix/brew
@@ -77,12 +70,7 @@ jobs:
 
   e2e-ios:
     runs-on: macos-latest
-    needs:
-      [
-        install-e2e-dependencies,
-        install-frontend-dependencies,
-        install-cocoapods,
-      ]
+    needs: [install-e2e-dependencies, install-frontend-dependencies]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
