@@ -45,6 +45,7 @@ jobs:
           key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
+
       - name: Install CocoaPods
         if: steps.cache-cocoapods.outputs.cache-hit != 'true'
         run: NO_FLIPPER=1 bundle exec pod install --project-directory=ios
@@ -61,11 +62,13 @@ jobs:
           key: ${{ runner.os }}-detox-build
           restore-keys: |
             ${{ runner.os }}-detox-build
+
       - name: Detox build
         run: >
           yarn detox build
           --configuration ${{ env.DETOX_CONFIGURATION }}
           --if-missing
+
       - name: Detox test
         run: >
           yarn detox test
@@ -76,6 +79,7 @@ jobs:
           --record-logs all
           --record-videos failing
           --take-screenshots failing
+
       - name: Upload artifacts
         if: failure()
         uses: actions/upload-artifact@v4
