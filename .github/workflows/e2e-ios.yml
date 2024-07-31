@@ -60,14 +60,14 @@ jobs:
         run: yarn detox rebuild-framework-cache
         working-directory: e2e
 
-      - name: Cache Detox build
-        id: cache-detox-build
-        uses: actions/cache@v4
-        with:
-          path: e2e/ios/build
-          key: ${{ runner.os }}-detox-build
-          restore-keys: |
-            ${{ runner.os }}-detox-build
+      # - name: Cache Detox build
+      #   id: cache-detox-build
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: e2e/ios/build
+      #     key: ${{ runner.os }}-detox-build
+      #     restore-keys: |
+      #       ${{ runner.os }}-detox-build
 
       - name: Detox build
         run: >
