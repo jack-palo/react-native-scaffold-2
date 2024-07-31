@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "build:ios": "detox build --configuration ios.sim.debug",
+    "build:android": "detox build --configuration android.emu.debug",
+    "test:ios": "DETOX_CONFIGURATION=ios.sim.debug ./node_modules/.bin/cucumber-js ./features/*.feature",
+    "test:android": "DETOX_CONFIGURATION=android.emu.debug ./node_modules/.bin/cucumber-js ./features/*.feature"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.24.7",
+    "@babel/register": "^7.24.6",
+    "@cucumber/cucumber": "^10.8.0",
+    "@cucumber/pretty-formatter": "^1.0.1",
+    "detox": "^20.23.0",
+    "jest": "^29.7.0",
+    "luxon": "^3.4.4"
+  }
+}
