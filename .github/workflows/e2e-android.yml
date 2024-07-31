@@ -70,11 +70,9 @@ jobs:
             ${{ runner.os }}-detox-build
 
       - name: Detox build
-        run: >
+        run: |
           cd e2e
-          yarn detox build
-          --configuration ${{ env.DETOX_CONFIGURATION }}
-          --if-missing
+          yarn detox build --configuration ${{ env.DETOX_CONFIGURATION }} --if-missing
 
       - name: Get device name
         id: device
