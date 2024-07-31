@@ -75,7 +75,6 @@ jobs:
           --configuration ${{ env.DETOX_CONFIGURATION }}
           --if-missing
         working-directory: e2e
-        timeout-minutes: 30
 
       - name: Detox test
         run: yarn ci:test:ios
