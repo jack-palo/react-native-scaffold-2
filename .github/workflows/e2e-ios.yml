@@ -5,7 +5,7 @@ on: push
 # Set default working directory
 defaults:
   run:
-    working-directory: ./e2e
+    working-directory: e2e
 
 jobs:
   e2e-ios:
@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: yarn
-          cache-dependency-path: ./e2e/yarn.lock
+          cache-dependency-path: e2e/yarn.lock
           node-version: 22
 
       - name: Install Yarn dependencies
@@ -45,7 +45,7 @@ jobs:
         id: cache-cocoapods
         uses: actions/cache@v4
         with:
-          path: ios/Pods
+          path: fe/ios/Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
@@ -53,12 +53,13 @@ jobs:
       - name: Install CocoaPods
         if: steps.cache-cocoapods.outputs.cache-hit != 'true'
         run: cd ios ; pod install ; cd -
+        working-directory: fe
 
       - name: Cache Detox build
         id: cache-detox-build
         uses: actions/cache@v4
         with:
-          path: ios/build
+          path: fe/ios/build
           key: ${{ runner.os }}-detox-build
           restore-keys: |
             ${{ runner.os }}-detox-build
