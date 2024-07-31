@@ -3,18 +3,19 @@
     "build:ios": "detox build --configuration ios.sim.debug",
     "build:ios:ci": "detox build --configuration ios.sim.release",
     "build:android": "detox build --configuration android.emu.debug",
-    "build:android:ci": "detox build --configuration android.emu.release",
     "test:ios": "DETOX_CONFIGURATION=ios.sim.debug ./node_modules/.bin/cucumber-js ./features/*.feature",
-    "test:ios:ci": "DETOX_CONFIGURATION=ios.sim.release DETOX_CLEANUP=true DETOX_HEADLESS=true node_modules/.bin/cucumber-js ./features/*.feature",
     "test:android": "DETOX_CONFIGURATION=android.emu.debug ./node_modules/.bin/cucumber-js ./features/*.feature",
-    "test:android:ci": "DETOX_CONFIGURATION=android.emu.release DETOX_CLEANUP=true DETOX_HEADLESS=true node_modules/.bin/cucumber-js ./features/*.feature"
+    "ci:build:android": "detox build --configuration android.emu.release",
+    "ci:build:ios": "detox build --configuration ios.sim.release",
+    "ci:test:android": "DETOX_CONFIGURATION=android.emu.release DETOX_CLEANUP=true DETOX_HEADLESS=true node_modules/.bin/cucumber-js ./features/*.feature",
+    "ci:test:ios": "DETOX_CONFIGURATION=ios.sim.release DETOX_CLEANUP=true DETOX_HEADLESS=true node_modules/.bin/cucumber-js ./features/*.feature"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.7",
     "@babel/register": "^7.24.6",
     "@cucumber/cucumber": "^10.8.0",
     "@cucumber/pretty-formatter": "^1.0.1",
-    "detox": "^20.23.0",
+    "detox": "^20.24.0",
     "jest": "^29.7.0",
     "luxon": "^3.4.4"
   }
