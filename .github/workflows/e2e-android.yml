@@ -23,10 +23,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: yarn
-          node-version-file: .nvmrc
+          node-version: 22
 
       - name: Install Yarn dependencies
         run: yarn --frozen-lockfile --prefer-offline
+        working-directory: e2e
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -72,6 +73,7 @@ jobs:
           yarn detox build
           --configuration ${{ env.DETOX_CONFIGURATION }}
           --if-missing
+        working-directory: e2e
 
       - name: Get device name
         id: device
@@ -95,6 +97,7 @@ jobs:
             --record-logs failing
             --record-videos failing
             --take-screenshots failing
+          working-directory: e2e
 
       - name: Upload artifacts
         if: failure()
