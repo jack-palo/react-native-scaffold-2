@@ -77,16 +77,6 @@ jobs:
       - name: Show available disk space
         run: df -h
 
-      - name: Clean up node_modules to save disk space
-        run: |
-          cd fe
-          rm -rf node_modules
-          cd ../e2e
-          rm -rf node_modules
-
-      - name: Show available disk space
-        run: df -h
-
       - name: Detox build
         run: >
           yarn detox build
