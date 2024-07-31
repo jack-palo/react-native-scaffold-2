@@ -6,6 +6,7 @@ on: push
 defaults:
   run:
     working-directory: ./e2e
+    shell: bash
 
 jobs:
   e2e-ios:
