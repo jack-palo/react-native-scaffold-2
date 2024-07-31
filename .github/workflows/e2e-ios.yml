@@ -78,15 +78,7 @@ jobs:
         timeout-minutes: 30
 
       - name: Detox test
-        run: >
-          yarn detox test
-          --capture-view-hierarchy enabled
-          --cleanup
-          --configuration ${{ env.DETOX_CONFIGURATION }}
-          --headless
-          --record-logs all
-          --record-videos failing
-          --take-screenshots failing
+        run: yarn ci:test:android
         working-directory: e2e
 
       - name: Upload artifacts
