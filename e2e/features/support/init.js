@@ -29,7 +29,12 @@ Before(async (message) => {
   }
 
   // workaround for close the dev launcher
-  await element(by.text('react-native-scaffold-2')).swipe('down')
+  const isReleaseMode =
+    process.env.DETOX_CONFIGURATION === 'ios.sim.release' ||
+    process.env.DETOX_CONFIGURATION === 'android.emu.release'
+  if (!isReleaseMode) {
+    await element(by.text('react-native-scaffold-2')).swipe('down')
+  }
 
   const { pickle } = message
   await detox.onTestStart({
