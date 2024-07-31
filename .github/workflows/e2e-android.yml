@@ -20,7 +20,7 @@ jobs:
 
       - name: Install Yarn dependencies
         run: yarn --frozen-lockfile --prefer-offline
-        working-directory: fe
+        working-directory: e2e
 
       - name: Setup Java
         uses: actions/setup-java@v4
