@@ -69,6 +69,10 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-detox-build
 
+      - uses: futureware-tech/simulator-action@v3
+        with:
+          model: 'iPhone 12'
+
       - name: Detox build
         run: >
           yarn detox build
