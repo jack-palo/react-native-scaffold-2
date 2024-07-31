@@ -4,7 +4,7 @@ on: push
 
 jobs:
   install-e2e-dependencies:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
         working-directory: e2e
 
   install-frontend-dependencies:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
