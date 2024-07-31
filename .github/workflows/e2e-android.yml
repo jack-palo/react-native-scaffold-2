@@ -74,6 +74,9 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-detox-build
 
+      - name: Show available disk space
+        run: df -h
+
       - name: Detox build
         run: >
           yarn detox build
