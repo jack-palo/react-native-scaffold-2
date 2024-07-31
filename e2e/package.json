@@ -1,8 +1,10 @@
 {
   "scripts": {
     "build:ios": "detox build --configuration ios.sim.debug",
+    "build:ios:ci": "detox build --configuration ios.sim.release",
     "build:android": "detox build --configuration android.emu.debug",
     "test:ios": "DETOX_CONFIGURATION=ios.sim.debug ./node_modules/.bin/cucumber-js ./features/*.feature",
+    "test:ios:ci": "DETOX_CONFIGURATION=ios.sim.release DETOX_CLEANUP=true DETOX_HEADLESS=true node_modules/.bin/cucumber-js ./features/*.feature",
     "test:android": "DETOX_CONFIGURATION=android.emu.debug ./node_modules/.bin/cucumber-js ./features/*.feature"
   },
   "devDependencies": {
