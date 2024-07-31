@@ -36,7 +36,7 @@ jobs:
 
       - name: Install CocoaPods
         if: steps.cache-cocoapods.outputs.cache-hit != 'true'
-        run: cd ios ; pod install
+        run: cd ios && pod install
         working-directory: fe
       # === Install CocoaPods ===
 
