@@ -71,10 +71,10 @@ jobs:
 
       - name: Detox build
         run: >
+          cd e2e
           yarn detox build
           --configuration ${{ env.DETOX_CONFIGURATION }}
           --if-missing
-        working-directory: e2e
 
       - name: Get device name
         id: device
