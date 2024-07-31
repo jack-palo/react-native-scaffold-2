@@ -16,7 +16,7 @@ jobs:
           cache-dependency-path: fe/yarn.lock
           node-version: 22
 
-      - name: Install Yarn dependencies
+      - name: Install Yarn dependencies for frontend
         run: yarn --frozen-lockfile --prefer-offline
         working-directory: fe
 
@@ -47,6 +47,10 @@ jobs:
         if: steps.cache-cocoapods.outputs.cache-hit != 'true'
         run: cd ios ; pod install ; cd -
         working-directory: fe
+
+      - name: Install Yarn dependencies for e2e
+        run: yarn --frozen-lockfile --prefer-offline
+        working-directory: e2e
 
       - name: Cache Detox build
         id: cache-detox-build
