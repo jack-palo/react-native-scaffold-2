@@ -73,6 +73,7 @@ jobs:
           yarn detox build
           --configuration ${{ env.DETOX_CONFIGURATION }}
           --if-missing
+        working-directory: e2e
 
       - name: Detox test
         run: >
@@ -84,6 +85,7 @@ jobs:
           --record-logs all
           --record-videos failing
           --take-screenshots failing
+        working-directory: e2e
 
       - name: Upload artifacts
         if: failure()
