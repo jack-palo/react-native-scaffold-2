@@ -3,8 +3,43 @@ name: e2e-ios
 on: push
 
 jobs:
-  install-mac-dependencies:
+  install-e2e-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: yarn
+          cache-dependency-path: e2e/yarn.lock
+          node-version: 22
+
+      - name: Install Yarn dependencies for e2e
+        run: yarn --frozen-lockfile --prefer-offline
+        working-directory: e2e
+
+  install-frontend-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: yarn
+          cache-dependency-path: fe/yarn.lock
+          node-version: 22
+
+      - name: Install Yarn dependencies for frontend
+        run: yarn --frozen-lockfile --prefer-offline
+        working-directory: fe
+
+  install-cocoapods:
     runs-on: macos-latest
+    needs: [install-frontend-dependencies]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,27 +74,6 @@ jobs:
         run: cd ios && pod install
         working-directory: fe
       # === Install CocoaPods ===
-
-  install-yarn-dependencies:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          cache: yarn
-          cache-dependency-path: fe/yarn.lock
-          node-version: 22
-
-      - name: Install Yarn dependencies for frontend
-        run: yarn --frozen-lockfile --prefer-offline
-        working-directory: fe
-
-      - name: Install Yarn dependencies for e2e
-        run: yarn --frozen-lockfile --prefer-offline
-        working-directory: e2e
 
   e2e-ios:
     runs-on: macos-latest
