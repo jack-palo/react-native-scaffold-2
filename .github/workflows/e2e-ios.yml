@@ -77,7 +77,12 @@ jobs:
 
   e2e-ios:
     runs-on: macos-latest
-    needs: [install-mac-dependencies, install-yarn-dependencies]
+    needs:
+      [
+        install-e2e-dependencies,
+        install-frontend-dependencies,
+        install-cocoapods,
+      ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
