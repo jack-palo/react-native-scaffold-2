@@ -78,7 +78,7 @@ jobs:
         timeout-minutes: 30
 
       - name: Detox test
-        run: yarn ci:test:android
+        run: yarn ci:test:ios
         working-directory: e2e
 
       - name: Upload artifacts
