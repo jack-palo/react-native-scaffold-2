@@ -51,6 +51,10 @@ jobs:
         run: NO_FLIPPER=1 bundle exec pod install --project-directory=ios
         working-directory: fe
 
+      - name: Install Yarn dependencies for e2e
+        run: yarn --frozen-lockfile --prefer-offline
+        working-directory: e2e
+
       - name: Detox rebuild framework cache
         run: yarn detox rebuild-framework-cache
         working-directory: e2e
