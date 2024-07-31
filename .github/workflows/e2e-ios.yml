@@ -6,7 +6,6 @@ on: push
 defaults:
   run:
     working-directory: ./e2e
-    shell: bash
 
 jobs:
   e2e-ios:
@@ -22,6 +21,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: yarn
+          cache-dependency-path: ./e2e/yarn.lock
           node-version: 22
 
       - name: Install Yarn dependencies
