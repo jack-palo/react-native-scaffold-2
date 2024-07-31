@@ -74,6 +74,7 @@ jobs:
           --configuration ${{ env.DETOX_CONFIGURATION }}
           --if-missing
         working-directory: e2e
+        timeout-minutes: 15
 
       - name: Detox test
         run: >
