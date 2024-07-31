@@ -18,6 +18,7 @@ jobs:
 
       - name: Install Yarn dependencies
         run: yarn --frozen-lockfile --prefer-offline
+        working-directory: fe
 
       - name: Install macOS dependencies
         run: |
