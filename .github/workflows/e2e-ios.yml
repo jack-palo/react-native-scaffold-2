@@ -2,11 +2,6 @@ name: e2e-ios
 
 on: push
 
-# Set default working directory
-defaults:
-  run:
-    working-directory: e2e
-
 jobs:
   e2e-ios:
     runs-on: macos-latest
@@ -18,7 +13,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: yarn
-          cache-dependency-path: e2e/yarn.lock
+          cache-dependency-path: fe/yarn.lock
           node-version: 22
 
       - name: Install Yarn dependencies
@@ -47,12 +42,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pods-
 
-      - name: Print working directory
-        working-directory: fe
-        run: |
-          pwd
-          ls -la
-
       - name: Install CocoaPods
         if: steps.cache-cocoapods.outputs.cache-hit != 'true'
         run: cd ios ; pod install ; cd -
@@ -62,16 +51,18 @@ jobs:
         id: cache-detox-build
         uses: actions/cache@v4
         with:
-          path: fe/ios/build
+          path: e2e/ios/build
           key: ${{ runner.os }}-detox-build
           restore-keys: |
             ${{ runner.os }}-detox-build
 
       - name: Detox build
         run: yarn detox build --configuration ios.sim.release
+        working-directory: e2e
 
       - name: Detox test
         run: yarn detox test --configuration ios.sim.release --cleanup --headless --record-logs all
+        working-directory: e2e
 
       - name: Upload artifacts
         if: failure()
