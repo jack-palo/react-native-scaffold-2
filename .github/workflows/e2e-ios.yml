@@ -4,7 +4,7 @@ on: push
 
 jobs:
   e2e-ios:
-    runs-on: macos-12
+    runs-on: macos-latest
     env:
       DETOX_CONFIGURATION: ios.sim.release
       ACTIONS_STEP_DEBUG: true # Enable step debug
@@ -71,7 +71,7 @@ jobs:
 
       - uses: futureware-tech/simulator-action@v3
         with:
-          model: 'iPhone 12'
+          model: 'iPhone 15'
 
       - name: Detox build
         run: >
