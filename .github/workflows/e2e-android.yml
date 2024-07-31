@@ -1,26 +1,32 @@
-# .github/workflows/e2e-android.yml
 name: e2e-android
-
 on: push
 
 jobs:
   e2e-android:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
+    env:
+      API_LEVEL: 33
+      ARCH: x86_64
+      DETOX_CONFIGURATION: android.emu.release
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           cache: yarn
-          cache-dependency-path: fe/yarn.lock
-          node-version: 22
+          node-version-file: .nvmrc
 
       - name: Install Yarn dependencies
         run: yarn --frozen-lockfile --prefer-offline
-        working-directory: e2e
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -29,31 +35,66 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ env.API_LEVEL }}
+
+      - name: Create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.API_LEVEL }}
+          arch: ${{ env.ARCH }}
+          disable-animations: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          force-avd-creation: false
+          script: echo 'Generated AVD snapshot for caching.'
+
       - name: Cache Detox build
         id: cache-detox-build
         uses: actions/cache@v4
         with:
-          path: fe/android/app/build
+          path: android/app/build
           key: ${{ runner.os }}-detox-build
           restore-keys: |
             ${{ runner.os }}-detox-build
 
       - name: Detox build
-        run: yarn build:android:ci
-        working-directory: e2e
+        run: >
+          yarn detox build
+          --configuration ${{ env.DETOX_CONFIGURATION }}
+          --if-missing
 
       - name: Get device name
         id: device
-        run: node -e "console.log('AVD_NAME=' + require('./.detoxrc').devices.emulator.device.avdName)" >> $GITHUB_OUTPUT
+        run: |
+          AVD_NAME=$(node -p "require('./.detoxrc').devices.emulator.device.avdName")
+          echo "AVD_NAME=$AVD_NAME" >> $GITHUB_OUTPUT
 
       - name: Detox test
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 31
-          arch: x86_64
+          api-level: ${{ env.API_LEVEL }}
+          arch: ${{ env.ARCH }}
           avd-name: ${{ steps.device.outputs.AVD_NAME }}
-          script: yarn test:android:ci
-          working-directory: e2e
+          disable-animations: true
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          force-avd-creation: false
+          script: >
+            yarn detox test
+            --configuration ${{ env.DETOX_CONFIGURATION }}
+            --headless
+            --record-logs failing
+            --record-videos failing
+            --take-screenshots failing
 
       - name: Upload artifacts
         if: failure()
@@ -61,3 +102,4 @@ jobs:
         with:
           name: detox-artifacts
           path: artifacts
+          retention-days: 14
