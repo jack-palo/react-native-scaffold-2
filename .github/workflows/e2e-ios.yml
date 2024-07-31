@@ -5,7 +5,7 @@ on: push
 # Set default working directory
 defaults:
   run:
-    working-directory: e2e
+    working-directory: ./e2e
 
 jobs:
   e2e-ios:
