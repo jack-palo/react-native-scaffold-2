@@ -53,6 +53,7 @@ jobs:
 
       - name: Detox rebuild framework cache
         run: yarn detox rebuild-framework-cache
+        working-directory: e2e
 
       - name: Cache Detox build
         id: cache-detox-build
