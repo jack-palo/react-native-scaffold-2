@@ -4,7 +4,7 @@ on: push
 
 jobs:
   e2e-ios:
-    runs-on: macos-latest
+    runs-on: macos-12
     env:
       DETOX_CONFIGURATION: ios.sim.release
       ACTIONS_STEP_DEBUG: true # Enable step debug
