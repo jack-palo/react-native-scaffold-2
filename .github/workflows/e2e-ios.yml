@@ -5,6 +5,9 @@ on: push
 jobs:
   e2e-ios:
     runs-on: macos-latest
+    env:
+      DETOX_CONFIGURATION: ios.sim.release
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,7 +19,7 @@ jobs:
           cache-dependency-path: fe/yarn.lock
           node-version: 22
 
-      - name: Install Yarn dependencies for frontend
+      - name: Install Yarn dependencies
         run: yarn --frozen-lockfile --prefer-offline
         working-directory: fe
 
@@ -31,8 +34,8 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          bundler-cache: true
           ruby-version: 3.3.4
+          bundler-cache: true
 
       - name: Cache CocoaPods
         id: cache-cocoapods
@@ -42,15 +45,13 @@ jobs:
           key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
-
       - name: Install CocoaPods
         if: steps.cache-cocoapods.outputs.cache-hit != 'true'
-        run: cd ios ; pod install ; cd -
+        run: NO_FLIPPER=1 bundle exec pod install --project-directory=ios
         working-directory: fe
 
-      - name: Install Yarn dependencies for e2e
-        run: yarn --frozen-lockfile --prefer-offline
-        working-directory: e2e
+      - name: Detox rebuild framework cache
+        run: yarn detox rebuild-framework-cache
 
       - name: Cache Detox build
         id: cache-detox-build
@@ -60,15 +61,21 @@ jobs:
           key: ${{ runner.os }}-detox-build
           restore-keys: |
             ${{ runner.os }}-detox-build
-
       - name: Detox build
-        run: yarn build:ios:ci
-        working-directory: e2e
-
+        run: >
+          yarn detox build
+          --configuration ${{ env.DETOX_CONFIGURATION }}
+          --if-missing
       - name: Detox test
-        run: yarn test:ios:ci
-        working-directory: e2e
-
+        run: >
+          yarn detox test
+          --capture-view-hierarchy enabled
+          --cleanup
+          --configuration ${{ env.DETOX_CONFIGURATION }}
+          --headless
+          --record-logs all
+          --record-videos failing
+          --take-screenshots failing
       - name: Upload artifacts
         if: failure()
         uses: actions/upload-artifact@v4
