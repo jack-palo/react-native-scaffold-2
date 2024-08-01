@@ -13,6 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - uses: futureware-tech/simulator-action@v3
+        with:
+          model: 'iPhone 15'
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -68,10 +72,6 @@ jobs:
       #     key: ${{ runner.os }}-detox-build
       #     restore-keys: |
       #       ${{ runner.os }}-detox-build
-
-      # - uses: futureware-tech/simulator-action@v3
-      #   with:
-      #     model: 'iPhone 15'
 
       - name: Detox build
         run: >
