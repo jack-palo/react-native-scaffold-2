@@ -1,4 +1,4 @@
-import { After, AfterAll, Before, BeforeAll } from '@cucumber/cucumber'
+import { After, Before, BeforeAll } from '@cucumber/cucumber'
 import detox from 'detox/internals'
 
 const getUrl = (url) => {
@@ -53,6 +53,6 @@ After(async (message) => {
   })
 })
 
-AfterAll(async () => {
-  await detox.cleanup()
-})
+// AfterAll(async () => {
+//   await detox.cleanup()
+// })
