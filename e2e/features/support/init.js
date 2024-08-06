@@ -7,8 +7,8 @@ const getUrl = (url) => {
   )}`
 }
 
-// BeforeAll({ timeout: 120 * 1000 }, async () => {
-BeforeAll({}, async () => {
+// Timeout in seconds
+BeforeAll({ timeout: 900 * 1000 }, async () => {
   await detox.init()
 
   if (device.getPlatform() === 'android') {

@@ -4,7 +4,7 @@ on: push
 
 jobs:
   e2e-ios:
-    runs-on: macos-latest
+    runs-on: [self-hosted, macOS, ARM64]
     env:
       DETOX_CONFIGURATION: ios.sim.release
       ACTIONS_STEP_DEBUG: true # Enable step debug
@@ -60,14 +60,14 @@ jobs:
         run: yarn detox rebuild-framework-cache
         working-directory: e2e
 
-      # - name: Cache Detox build
-      #   id: cache-detox-build
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: e2e/ios/build
-      #     key: ${{ runner.os }}-detox-build
-      #     restore-keys: |
-      #       ${{ runner.os }}-detox-build
+      - name: Cache Detox build
+        id: cache-detox-build
+        uses: actions/cache@v4
+        with:
+          path: e2e/ios/build
+          key: ${{ runner.os }}-detox-build
+          restore-keys: |
+            ${{ runner.os }}-detox-build
 
       - name: Detox build
         run: >
